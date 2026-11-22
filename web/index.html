@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es" data-tema="oscuro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<title>SQL en la Hacienda · Curso interactivo de SQL</title>
+<meta name="description" content="Curso interactivo de SQL con una base de datos ganadera real: PostgreSQL, ejercicios corregidos automáticamente y 40 lecciones.">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/app.css">
+</head>
+<body>
+
+<!-- ===================== Pantalla de carga ===================== -->
+<div id="cargando" class="cargando">
+  <div class="cargando__marca">
+    <span class="cargando__icono">🐄</span>
+    <div>
+      <strong>SQL en la Hacienda</strong>
+      <small>Conectando con PostgreSQL…</small>
+    </div>
+  </div>
+  <div class="cargando__barra"><span></span></div>
+</div>
+
+<!-- ===================== Aplicación ===================== -->
+<div class="app" id="app" hidden>
+
+  <!-- ---------- Barra lateral ---------- -->
+  <aside class="lateral" id="lateral" aria-label="Navegación principal">
+    <a class="marca" href="#/inicio">
+      <span class="marca__logo">🐄</span>
+      <span class="marca__texto">
+        <strong>SQL en la Hacienda</strong>
+        <small>Hacienda Las Piñas</small>
+      </span>
+    </a>
+
+    <div class="progreso-caja">
+      <div class="progreso-caja__aro" id="aro-progreso">
+        <svg viewBox="0 0 44 44" aria-hidden="true">
+          <circle class="aro-fondo" cx="22" cy="22" r="18"></circle>
+          <circle class="aro-valor" cx="22" cy="22" r="18" id="aro-circulo"></circle>
+        </svg>
+        <span id="aro-texto">0%</span>
+      </div>
+      <div class="progreso-caja__datos">
+        <strong id="progreso-lecciones">0 / 0 lecciones</strong>
+        <small id="progreso-ejercicios">0 / 0 ejercicios</small>
+        <button class="enlace-mini" id="btn-reiniciar-progreso">reiniciar progreso</button>
+      </div>
+    </div>
+
+    <nav class="menu">
+      <a class="menu__item" data-ruta="inicio" href="#/inicio">
+        <svg viewBox="0 0 24 24" class="ico"><path d="M3 10.5 12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg>
+        <span>Inicio</span>
+      </a>
+      <a class="menu__item" data-ruta="lecciones" href="#/lecciones">
+        <svg viewBox="0 0 24 24" class="ico"><path d="M4 4h7a3 3 0 0 1 3 3v13a2.5 2.5 0 0 0-2.5-2.5H4zM20 4h-3a3 3 0 0 0-3 3v13a2.5 2.5 0 0 1 2.5-2.5H20z"/></svg>
+        <span>Lecciones</span>
+        <span class="menu__badge" id="badge-lecciones">0</span>
+      </a>
+      <a class="menu__item" data-ruta="ejercicios" href="#/ejercicios">
+        <svg viewBox="0 0 24 24" class="ico"><path d="M6.5 6.5v11M17.5 6.5v11M4 9h5M15 9h5M4 15h5M15 15h5M9 6.5v11M15 6.5v11"/></svg>
+        <span>Ejercicios</span>
+        <span class="menu__badge" id="badge-ejercicios">0</span>
+      </a>
+      <a class="menu__item" data-ruta="playground" href="#/playground">
+        <svg viewBox="0 0 24 24" class="ico"><path d="M4 6h16v12H4zM7 10l2.5 2L7 14M12 14h5"/></svg>
+        <span>Laboratorio</span>
+      </a>
+      <a class="menu__item" data-ruta="modelo" href="#/modelo">
+        <svg viewBox="0 0 24 24" class="ico"><ellipse cx="12" cy="5.5" rx="8" ry="3"/><path d="M4 5.5v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6M4 11.5v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg>
+        <span>Modelo de datos</span>
+      </a>
+      <a class="menu__item" data-ruta="chuleta" href="#/chuleta">
+        <svg viewBox="0 0 24 24" class="ico"><path d="M5 3h11l3 3v15H5zM8 8h8M8 12h8M8 16h5"/></svg>
+        <span>Chuleta</span>
+      </a>
+    </nav>
+
+    <div class="modulos-nav" id="modulos-nav"></div>
+
+    <div class="lateral__pie">
+      <span class="punto" id="punto-conexion" title="Estado de PostgreSQL"></span>
+      <span id="texto-conexion">PostgreSQL</span>
+      <button class="enlace-mini" id="btn-reiniciar-db" title="Vuelve a cargar los datos originales">restablecer datos</button>
+    </div>
+  </aside>
+
+  <!-- ---------- Contenido ---------- -->
+  <div class="principal">
+    <header class="barra">
+      <button class="icono-btn solo-movil" id="btn-menu" aria-label="Abrir menú">
+        <svg viewBox="0 0 24 24" class="ico"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <nav class="migas" id="migas" aria-label="Ruta"></nav>
+      <div class="barra__acciones">
+        <button class="buscador" id="btn-buscar">
+          <svg viewBox="0 0 24 24" class="ico"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <span>Buscar…</span>
+          <kbd>Ctrl K</kbd>
+        </button>
+        <button class="icono-btn" id="btn-tema" aria-label="Cambiar tema" title="Cambiar tema">
+          <svg viewBox="0 0 24 24" class="ico ico-tema-sol"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M19 5l-1.5 1.5M6.5 17.5 5 19"/></svg>
+          <svg viewBox="0 0 24 24" class="ico ico-tema-luna"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main id="vista" class="vista" tabindex="-1"></main>
+  </div>
+</div>
+
+<!-- ===================== Buscador global ===================== -->
+<div class="dialogo" id="dialogo-buscar" hidden>
+  <div class="dialogo__fondo" data-cerrar></div>
+  <div class="dialogo__caja">
+    <input type="search" id="entrada-buscar" placeholder="Buscar lecciones, ejercicios, tablas, comandos…" autocomplete="off">
+    <div class="dialogo__resultados" id="resultados-buscar"></div>
+    <div class="dialogo__pie"><kbd>↑</kbd><kbd>↓</kbd> moverse <kbd>Enter</kbd> abrir <kbd>Esc</kbd> cerrar</div>
+  </div>
+</div>
+
+<div class="avisos" id="avisos" aria-live="polite"></div>
+
+<div class="modal" id="modal" hidden>
+  <div class="modal__fondo" data-cerrar></div>
+  <div class="modal__caja" role="dialog" aria-modal="true">
+    <h3 id="modal-titulo"></h3>
+    <div id="modal-cuerpo"></div>
+    <div class="modal__acciones">
+      <button class="btn btn--fantasma" data-cerrar>Cancelar</button>
+      <button class="btn btn--peligro" id="modal-ok">Sí, continuar</button>
+    </div>
+  </div>
+</div>
+
+<script src="assets/js/core.js"></script>
+<script src="assets/js/editor.js"></script>
+<script src="assets/data/curriculum-01.js"></script>
+<script src="assets/data/curriculum-02.js"></script>
+<script src="assets/data/curriculum-03.js"></script>
+<script src="assets/data/curriculum-04.js"></script>
+<script src="assets/data/ejercicios.js"></script>
+<script src="assets/data/modelo.js"></script>
+<script src="assets/data/chuleta.js"></script>
+<script src="assets/js/views.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

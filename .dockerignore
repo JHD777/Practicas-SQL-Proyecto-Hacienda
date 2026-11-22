@@ -1,0 +1,6 @@
+.git
+.gitignore
+pgdata
+*.md
+*.bat
+*.sh

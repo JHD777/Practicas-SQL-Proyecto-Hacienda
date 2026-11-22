@@ -1,0 +1,12 @@
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Datos locales de Docker / base de datos
+pgdata/
+*.log
+
+# Entornos y temporales
+.env
+.env.local
